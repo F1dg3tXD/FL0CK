@@ -5,22 +5,25 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const { data: session } = useSession();
-
-{
-    session?.user?.username === username && (
-        <a
-            href={`/user/${username}/edit`}
-            className="inline-block mt-6 bg-sky-500 hover:bg-sky-600 px-4 py-2 rounded-lg"
-        >
-            Edit Profile
-        </a>
-    )
+// Reuse the GitHubSession type from your lib
+interface GitHubSession {
+    user: {
+        name?: string | null;
+        email?: string | null;
+        image?: string | null;
+        username?: string; // <- this is key
+    };
+    expires: string;
 }
 
 export default function EditProfilePage() {
     const { username } = useParams();
     const router = useRouter();
+    const { data: sessionData } = useSession();
+
+    // Cast session to GitHubSession so TypeScript knows about username
+    const session = sessionData as GitHubSession | null;
+
     const [bio, setBio] = useState("");
     const [avatarUrl, setAvatarUrl] = useState("");
     const [loading, setLoading] = useState(true);
@@ -52,7 +55,16 @@ export default function EditProfilePage() {
         <div className="min-h-screen bg-neutral-950 text-white p-8 max-w-xl mx-auto">
             <h1 className="text-2xl font-bold mb-4 text-sky-400">Edit Profile</h1>
 
-            <div className="mb-4">
+            {session?.user?.username === username && (
+                <a
+                    href={`/user/${username}/edit`}
+                    className="inline-block mt-6 bg-sky-500 hover:bg-sky-600 px-4 py-2 rounded-lg"
+                >
+                    Edit Profile
+                </a>
+            )}
+
+            <div className="mb-4 mt-4">
                 <label className="block mb-1 text-neutral-400">Avatar URL</label>
                 <input
                     className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-3"
@@ -79,4 +91,3 @@ export default function EditProfilePage() {
         </div>
     );
 }
-

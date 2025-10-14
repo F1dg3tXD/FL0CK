@@ -1,20 +1,32 @@
-// Feed Page
 "use client";
 
 import { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
+
+interface Post {
+    id: string;
+    user_id: string;
+    content: string;
+    created_at: string;
+}
+
+interface UserSearch {
+    user_id: string;
+    avatar_url?: string;
+}
 
 export default function FeedPage() {
     const { data: session } = useSession();
-    const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [newPost, setNewPost] = useState("");
     const [search, setSearch] = useState("");
-    const [results, setResults] = useState<any[]>([]);
+    const [results, setResults] = useState<UserSearch[]>([]);
 
     async function fetchPosts() {
         const res = await fetch("/api/posts");
-        const data = await res.json();
+        const data: Post[] = await res.json();
         setPosts(data);
     }
 
@@ -38,7 +50,7 @@ export default function FeedPage() {
             return;
         }
         const res = await fetch(`/api/users/search?q=${encodeURIComponent(search)}`);
-        const data = await res.json();
+        const data: UserSearch[] = await res.json();
         setResults(data);
     }
 
@@ -66,7 +78,7 @@ export default function FeedPage() {
                 </button>
             </div>
 
-            {/* Search bar */}
+            {/* Search */}
             <form onSubmit={handleSearch} className="mb-6 flex gap-2">
                 <input
                     className="flex-grow bg-neutral-900 border border-neutral-800 rounded-lg p-3 text-white"
@@ -77,7 +89,6 @@ export default function FeedPage() {
                 <button className="bg-sky-500 hover:bg-sky-600 px-4 rounded-lg">Search</button>
             </form>
 
-            {/* Search results */}
             {results.length > 0 && (
                 <div className="bg-neutral-900 p-4 rounded-lg border border-neutral-800 mb-6">
                     <h2 className="text-lg font-semibold mb-2 text-sky-400">Users</h2>
@@ -86,16 +97,16 @@ export default function FeedPage() {
                             <Link
                                 key={u.user_id}
                                 href={`/profile/${u.user_id}`}
-                                className="hover:bg-neutral-800 p-2 rounded-md"
+                                className="hover:bg-neutral-800 p-2 rounded-md flex items-center gap-3"
                             >
-                                <div className="flex items-center gap-3">
-                                    <img
-                                        src={u.avatar_url || "/res/icon.png"}
-                                        alt="avatar"
-                                        className="w-8 h-8 rounded-full border border-neutral-700"
-                                    />
-                                    <span className="text-white">@{u.user_id}</span>
-                                </div>
+                                <Image
+                                    src={u.avatar_url || "/res/icon.png"}
+                                    alt="avatar"
+                                    width={32}
+                                    height={32}
+                                    className="rounded-full border border-neutral-700"
+                                />
+                                <span className="text-white">@{u.user_id}</span>
                             </Link>
                         ))}
                     </div>
