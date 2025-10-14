@@ -1,10 +1,29 @@
+"use client"
+
+import { useSession } from "next-auth/react"
+
 export default function Home() {
+  const { data: session } = useSession()
+
+  if (!session) {
+    return (
+      <div className="text-center mt-16">
+        <h2 className="text-2xl font-semibold">Welcome to FL0CK</h2>
+        <p className="mt-2 text-neutral-400">
+          Sign in with GitHub to start connecting your creative repositories.
+        </p>
+      </div>
+    )
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-950 text-gray-100">
-      <h1 className="text-5xl font-bold mb-2">🕊️ FL0CK</h1>
-      <p className="text-lg text-gray-400">
-        Fork Links of Creative Knowledge — coming soon.
+    <div className="text-center mt-16">
+      <h2 className="text-2xl font-semibold">
+        Welcome, {session.user?.name}!
+      </h2>
+      <p className="mt-2 text-neutral-400">
+        Your GitHub-linked creative space is ready.
       </p>
-    </main>
+    </div>
   )
 }
