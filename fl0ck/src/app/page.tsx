@@ -1,29 +1,28 @@
-"use client"
+// Home Page
+"use client";
 
-import { useSession } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
-  const { data: session } = useSession()
+export default function HomePage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  if (!session) {
-    return (
-      <div className="text-center mt-16">
-        <h2 className="text-2xl font-semibold">Welcome to FL0CK</h2>
-        <p className="mt-2 text-neutral-400">
-          Sign in with GitHub to start connecting your creative repositories.
-        </p>
-      </div>
-    )
-  }
+  if (status === "loading") return <div className="text-center p-8">Loading...</div>;
+  if (session) router.push("/feed");
 
   return (
-    <div className="text-center mt-16">
-      <h2 className="text-2xl font-semibold">
-        Welcome, {session.user?.name}!
-      </h2>
-      <p className="mt-2 text-neutral-400">
-        Your GitHub-linked creative space is ready.
+    <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-950 text-white">
+      <h1 className="text-4xl font-bold mb-4">Welcome to <span className="text-sky-400">FL0CK</span></h1>
+      <p className="text-neutral-400 mb-6 text-center max-w-md">
+        A social network where you own your data — all posts, media, and activity are stored in your GitHub repository.
       </p>
+      <button
+        onClick={() => signIn("github")}
+        className="bg-sky-500 hover:bg-sky-600 px-6 py-3 rounded-xl font-medium"
+      >
+        Sign in with GitHub
+      </button>
     </div>
-  )
+  );
 }
