@@ -1,12 +1,20 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
+import { NextRequest } from "next/server"
 
-export const authOptions = {
+const handler = NextAuth({
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
   ],
+})
+
+export async function GET(req: NextRequest) {
+  return handler(req)
 }
-export default NextAuth(authOptions)
+
+export async function POST(req: NextRequest) {
+  return handler(req)
+}
