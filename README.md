@@ -1,9 +1,9 @@
 # FL0CK
 
-### 🕊️ FLoCK — Fork Links of Creative Knowledge
+### 🕊️ FL0CK — Fork Links of Creative Knowledge
 
-FLoCK is a social network built around your GitHub repositories.  
-When you share images, videos, or posts on FLoCK, they’re stored **directly in your own GitHub account**, giving you full ownership of your content.
+FL0CK is a social network built around your GitHub repositories.  
+When you share images, videos, or posts on FL0CK, they’re stored **directly in your own GitHub account**, giving you full ownership of your content.
 
 No ads. No data mining. No central storage — just creators connecting through code, art, and ideas.
 
