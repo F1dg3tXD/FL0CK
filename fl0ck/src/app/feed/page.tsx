@@ -32,8 +32,15 @@ export default function FeedPage() {
 
     async function fetchPosts() {
         const res = await fetch("/api/posts");
-        const data: Post[] = await res.json();
-        setPosts(data);
+        const data = await res.json();
+        if (Array.isArray(data)) {
+            // legacy: if API returns array
+            setPosts(data);
+        } else if (Array.isArray(data.posts)) {
+            setPosts(data.posts);
+        } else {
+            setPosts([]);
+        }
     }
 
     async function handlePost() {

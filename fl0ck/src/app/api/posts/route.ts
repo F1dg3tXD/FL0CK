@@ -16,8 +16,11 @@ export async function GET() {
     .select(`id, content, created_at, user_id, profiles (name, avatar_url, username, verified)`)
     .order("created_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+  if (error || !Array.isArray(data)) {
+    // Always return an array, with error field for frontend
+    return NextResponse.json({ posts: [], error: error?.message || "Unknown error" }, { status: 200 });
+  }
+  return NextResponse.json({ posts: data });
 }
 
 export async function POST(req: Request) {
