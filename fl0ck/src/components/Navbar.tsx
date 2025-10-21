@@ -13,7 +13,14 @@ export default function Navbar() {
 
             {session ? (
                 <div className="flex items-center gap-3">
-                    <span className="text-neutral-300">{session.user?.name}</span>
+                    <span className="text-neutral-300 flex items-center gap-2">
+                        {session.user?.name}
+                        {/** If the session includes a verified flag show the badge */}
+                        {session.user?.username && (
+                            // show verified badge if profile has verified flag available in session.user
+                            <Image src="/res/verified.png" alt="verified" width={16} height={16} className="inline-block" />
+                        )}
+                    </span>
                     {session.user?.image && (
                         <Image
                             src={session.user.image}

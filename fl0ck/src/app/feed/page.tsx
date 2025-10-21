@@ -10,6 +10,12 @@ interface Post {
     user_id: string;
     content: string;
     created_at: string;
+    profiles?: {
+        name?: string;
+        avatar_url?: string;
+        username?: string;
+        verified?: boolean;
+    };
 }
 
 interface UserSearch {
@@ -131,21 +137,35 @@ export default function FeedPage() {
 
             {/* Feed */}
             <div className="flex flex-col gap-4">
-                {posts.map((p) => (
+                    {posts.map((p) => (
                     <div
                         key={p.id}
                         className="bg-neutral-900 p-4 rounded-xl border border-neutral-800"
                     >
-                        <p className="text-white">{p.content}</p>
-                        <p className="text-sm text-neutral-500 mt-1">
-                            <Link
-                                href={`/profile/${p.user_id}`}
-                                className="text-sky-400 hover:underline"
-                            >
-                                @{p.user_id}
-                            </Link>{" "}
-                            — {new Date(p.created_at).toLocaleString()}
-                        </p>
+                        <div className="flex items-start gap-3">
+                            <Image
+                                src={p.profiles?.avatar_url || "/res/icon.png"}
+                                alt="avatar"
+                                width={48}
+                                height={48}
+                                className="rounded-full border border-neutral-700"
+                            />
+                            <div>
+                                <p className="text-white">{p.content}</p>
+                                <p className="text-sm text-neutral-500 mt-1">
+                                    <Link
+                                        href={`/user/${p.user_id}`}
+                                        className="text-sky-400 hover:underline flex items-center gap-2 inline-block"
+                                    >
+                                        <span>@{p.profiles?.username || p.user_id}</span>
+                                        {p.profiles?.verified && (
+                                            <Image src="/res/verified.png" alt="verified" width={16} height={16} />
+                                        )}
+                                    </Link>{" "}
+                                    — {new Date(p.created_at).toLocaleString()}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>

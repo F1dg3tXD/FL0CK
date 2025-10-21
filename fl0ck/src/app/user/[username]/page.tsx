@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 
 interface Profile {
     user_id: string;
@@ -9,6 +10,7 @@ interface Profile {
     bio?: string;
     avatar_url?: string;
     banner_url?: string;
+    verified?: boolean;
 }
 
 interface Post {
@@ -43,11 +45,15 @@ export default function UserProfilePage() {
     return (
         <div className="min-h-screen bg-neutral-950 text-white">
             <div className="w-full h-48 bg-neutral-800 relative">
-                {profile.banner_url && <img src={profile.banner_url} alt="banner" className="w-full h-48 object-cover" />}
+                {profile.banner_url && (
+                    <Image src={profile.banner_url} alt="banner" className="w-full h-48 object-cover" width={1200} height={300} />
+                )}
                 <div className="absolute -bottom-12 left-8">
-                    <img
+                    <Image
                         src={profile.avatar_url || "/res/icon.png"}
                         alt="avatar"
+                        width={96}
+                        height={96}
                         className="w-24 h-24 rounded-full border-4 border-neutral-950"
                     />
                 </div>
@@ -56,7 +62,12 @@ export default function UserProfilePage() {
             <div className="px-8 mt-16">
                 <div className="flex justify-between items-center mb-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-white">{profile.name || profile.user_id}</h1>
+                        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+                            {profile.name || profile.user_id}
+                            {profile.verified && (
+                                <Image src="/res/verified.png" alt="verified" width={20} height={20} />
+                            )}
+                        </h1>
                         <p className="text-neutral-400">@{profile.user_id}</p>
                     </div>
                 </div>
